@@ -1,0 +1,50 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/cms
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: 1234
+
+  jpa:
+    database: mysql
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      naming:
+        strategy: org.hibernate.cfg.ImprovedNamingStrategy
+
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: cms
+  thymeleaf:
+    encoding: UTF-8
+    content-type: text/html
+    mode: HTML5
+    cache: false
+  mvc:
+    view:
+      prefix: /templates/
+      suffix: .html
+server:
+  port: 8443
+  ssl:
+    key-store: classpath:mykeys.jks
+    key-password: q1057024979
+    key-store-password: q1057024979
+logging:
+  path: /var/logs
+  file: BookWorm.log
+  level: warn
+    org:
+      springframework:
+        security: DEBUG
+amazon:
+        associateId: habuma-20
+
+
+
+
+
+
