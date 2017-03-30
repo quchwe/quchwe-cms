@@ -1,13 +1,21 @@
 package com.quchwe.gd.cms.bean;
 
-import javax.persistence.Table;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Date;
 
 /**
  * Created by quchwe on 2017/2/22 0022.
  */
-@Table
+@Entity
 public class SysUser {
+
+    private static long serialVersionUID = 2L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long uid;
     private String userName;
     private String userPassword;
@@ -161,4 +169,39 @@ public class SysUser {
     public void setDischargeDate(Date dischargeDate) {
         this.dischargeDate = dischargeDate;
     }
+
+    //    @Override
+//    public Collection<? extends GrantedAuthority> getAuthorities() {
+//        return Arrays.asList(new SimpleGrantedAuthority("SYSUSER"));
+//    }
+//
+    public String getPassword() {
+        return userPassword;
+    }
+
+
+    public String getUsername() {
+        return userName;
+    }
+//
+//
+//    @Override
+//    public boolean isAccountNonExpired() {
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean isAccountNonLocked() {
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean isCredentialsNonExpired() {
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean isEnabled() {
+//        return false;
+//    }
 }

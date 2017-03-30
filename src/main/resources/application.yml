@@ -27,6 +27,10 @@ spring:
     view:
       prefix: /templates/
       suffix: .html
+    static-path-pattern: /**
+  devtools:
+    restart:
+      enabled: true
 server:
   port: 8443
   ssl:
@@ -37,11 +41,10 @@ logging:
   path: /var/logs
   file: BookWorm.log
   level: warn
-    org:
-      springframework:
-        security: DEBUG
 amazon:
         associateId: habuma-20
+
+
 
 
 
