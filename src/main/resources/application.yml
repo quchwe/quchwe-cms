@@ -33,10 +33,10 @@ spring:
       enabled: true
 server:
   port: 8443
-  ssl:
-    key-store: classpath:mykeys.jks
-    key-password: q1057024979
-    key-store-password: q1057024979
+#  ssl:
+#    key-store: classpath:mykeys.jks
+#    key-password: q1057024979
+#    key-store-password: q1057024979
 logging:
   path: /var/logs
   file: BookWorm.log
