@@ -3,9 +3,19 @@ package com.quchwe.gd.cms.bean;
 /**
  * Created by quchwe on 2017/3/16 0016.
  */
-public class BaseResponseResult {
+public class BaseResponseResult<T> {
     private String errCode;
     private String errMsg;
+    private T resultInfo;
+
+
+    public T getResultInfo() {
+        return resultInfo;
+    }
+
+    public void setResultInfo(T resultInfo) {
+        this.resultInfo = resultInfo;
+    }
 
     public String getErrCode() {
         return errCode;

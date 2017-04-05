@@ -183,25 +183,27 @@ public class SysUser {
     public String getUsername() {
         return userName;
     }
-//
-//
-//    @Override
-//    public boolean isAccountNonExpired() {
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean isAccountNonLocked() {
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean isCredentialsNonExpired() {
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean isEnabled() {
-//        return false;
-//    }
+
+    @Override
+    public String toString() {
+        return "SysUser{" +
+                "uid=" + uid +
+                ", userName='" + userName + '\'' +
+                ", userPassword='" + userPassword + '\'' +
+                ", sex='" + sex + '\'' +
+                ", carId='" + carId + '\'' +
+                ", carVintage='" + carVintage + '\'' +
+                ", address='" + address + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", purchaseDate=" + purchaseDate +
+                ", drivingLicenseId='" + drivingLicenseId + '\'' +
+                ", createTime=" + createTime +
+                ", carType='" + carType + '\'' +
+                ", dischargeDate=" + dischargeDate +
+                ", email='" + email + '\'' +
+                ", age=" + age +
+                ", updateTime=" + updateTime +
+                ", loginName='" + loginName + '\'' +
+                '}';
+    }
 }
