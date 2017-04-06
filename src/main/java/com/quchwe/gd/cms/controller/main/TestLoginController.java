@@ -6,7 +6,6 @@ import com.quchwe.gd.cms.bean.BaseResponseResult;
 import com.quchwe.gd.cms.bean.SysUser;
 import com.quchwe.gd.cms.repository.SysUserRepository;
 import com.quchwe.gd.cms.utils.NormalUtil;
-import org.apache.juli.logging.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Created by quchwe on 2017/4/5 0005.
  */
-@RestController(value = "/user")
+@RestController
+@RequestMapping(value = "app/v1/user")
 public class TestLoginController {
 
     private static Logger log = LoggerFactory.getLogger(TestLoginController.class);
     @Autowired
     SysUserRepository userRepository;
+
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @SuppressWarnings("unchecked")
@@ -52,6 +53,7 @@ public class TestLoginController {
         responseResult.setResultInfo(user);
         responseResult.setErrCode(BaseResponse.INQUIRY_SUCCESS.getErrCode());
         responseResult.setErrMsg(BaseResponse.INQUIRY_SUCCESS.getErrMsg());
+        log.info("用户登录{}",user.toString());
         return responseResult;
     }
 
