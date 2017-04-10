@@ -1,4 +1,4 @@
-package com.quchwe.gd.cms.controller.main;
+package com.quchwe.gd.cms.controller.APP;
 
 import com.quchwe.gd.cms.bean.BaseRequest;
 import com.quchwe.gd.cms.bean.BaseResponse;
@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(value = "app/v1/user")
-public class TestLoginController {
+public class APPLoginController {
 
-    private static Logger log = LoggerFactory.getLogger(TestLoginController.class);
+    private static Logger log = LoggerFactory.getLogger(APPLoginController.class);
     @Autowired
     SysUserRepository userRepository;
 

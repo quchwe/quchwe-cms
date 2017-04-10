@@ -14,53 +14,14 @@ create table user(`UID` BIGINT(20) PRIMARY key not null,
 `CREATETIME` datetime,
 `UPDATETIME` datetime,
 `LOGINNAME` VARCHAR(50)
-)
-public Iterator<DBObject> myMapReduce(Query query,String inputCollectionName, String mapFunction,
-										  String reduceFunction,String finalize) {
+);
 
-		MapReduceOptions mapReduceOptions = new MapReduceOptions().outputTypeInline();
-
-		String mapFunc = replaceWithResourceIfNecessary(mapFunction);
-		String reduceFunc = replaceWithResourceIfNecessary(reduceFunction);
-		DBCollection inputCollection = getCollection(inputCollectionName);
-		MapReduceCommand command = new MapReduceCommand(inputCollection, mapFunc, reduceFunc,
-				mapReduceOptions.getOutputCollection(), mapReduceOptions.getOutputType(), null);
-
-		command.setFinalize(finalize);
-		DBObject commandObject = copyQuery(query, copyMapReduceOptions(mapReduceOptions, command));
-
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Executing MapReduce on collection [" + command.getInput() + "], mapFunction [" + mapFunc
-					+ "], reduceFunction [" + reduceFunc + "]");
-		}
-
-		CommandResult commandResult = command.getOutputType() == MapReduceCommand.OutputType.INLINE ? executeCommand(
-				commandObject, getDb().getOptions()) : executeCommand(commandObject);
-		handleCommandError(commandResult, commandObject);
-
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug(String.format("MapReduce command result = [%s]", serializeToJsonSafely(commandObject)));
-		}
-
-		MapReduceOutput mapReduceOutput = new MapReduceOutput(inputCollection, commandObject, commandResult);
-		System.out.println(mapReduceOutput.results());
-
-
-		Iterator<DBObject> mappedResults = mapReduceOutput.results().iterator();
-
-		//
-		//List<T>  result = new Gson().fromJson(mappedResults.toString(),new TypeToken<List<T>>(){}.getType());
-
-		return mappedResults;
-//        mappedResults.iterator();
-//       //String s = new Gson().toJson(mapReduceOutput.results());
-////        mappedResults = new Gson().fromJson(s, new TypeToken<List<T>>() {
-////        }.getType());
-////		DbObjectCallback<T> callback = new ReadDbObjectCallback<T>(mongoConverter, entityClass);
-////		for (DBObject dbObject : mapReduceOutput.results()) {
-////			mappedResults.add(callback.doWith(dbObject));
-////		}
-////
-////		MapReduceResults<T> mapReduceResult = new MapReduceResults<T>(mappedResults, commandResult);
-//        return mappedResults;
-	}
+CREATE TABLE REPAIR_RECORD(`ID` BIGINT NOT NULL  PRIMARY KEY AUTO_INCREMENT,
+  `USER_ID` VARCHAR(50) NOT NULL,
+ `REPAIRE_DATE` datetime,
+  `ACCIDENT_TYPE` VARCHAR(50),
+  `CREATE_TIME` DATETIME,
+  `DESCRIPTION` VARCHAR(1000),
+  `REPAIR_PROGRESS` VARCHAR(50),
+  `FILE_PATH` VARCHAR(1000)
+);
