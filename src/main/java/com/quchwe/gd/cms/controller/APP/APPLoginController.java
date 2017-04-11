@@ -5,14 +5,16 @@ import com.quchwe.gd.cms.bean.BaseResponse;
 import com.quchwe.gd.cms.bean.BaseResponseResult;
 import com.quchwe.gd.cms.bean.SysUser;
 import com.quchwe.gd.cms.repository.SysUserRepository;
+import com.quchwe.gd.cms.utils.FileUtils;
 import com.quchwe.gd.cms.utils.NormalUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by quchwe on 2017/4/5 0005.
@@ -40,7 +42,9 @@ public class APPLoginController {
         SysUser user = null;
         try {
             user = userRepository.findByPhoneNumber(sysUserBaseRequest.getRequestBean().getPhoneNumber());
+            String str = user.getHeadImage().substring(14,user.getHeadImage().length());
 
+            user.setHeadImage("http://192.168.43.8:8443/image/get/"+str.replace("\\","/"));
             if (user == null) {
                 responseResult.setErrCode(BaseResponse.INVALID_UID.getErrCode());
                 responseResult.setErrMsg(BaseResponse.INVALID_UID.getErrMsg());
@@ -53,7 +57,7 @@ public class APPLoginController {
         responseResult.setResultInfo(user);
         responseResult.setErrCode(BaseResponse.INQUIRY_SUCCESS.getErrCode());
         responseResult.setErrMsg(BaseResponse.INQUIRY_SUCCESS.getErrMsg());
-        log.info("用户登录{}",user.toString());
+        log.info("用户登录{}", user.toString());
         return responseResult;
     }
 
@@ -86,5 +90,67 @@ public class APPLoginController {
 
     }
 
+    @RequestMapping(value = "/updateUserInfo", method = RequestMethod.POST)
+    public BaseResponseResult<SysUser> updateUserInfo(@RequestParam("phoneNumber") String phoneNumber,
+                                                      @RequestParam(value = "sex", required = false) String sex,
+                                                      @RequestParam(value = "email", required = false) String email,
+                                                      @RequestParam(value = "address", required = false) String address,
+                                                      @RequestParam(value = "age", required = false) int age,
+                                                      @RequestParam(value = "drivingId", required = false) String drivingId,
+                                                      @RequestParam(value = "carType", required = false) String carType,
+                                                      @RequestParam(value = "purchaseDate", required = false) String purchaseDate,
+                                                      @RequestParam(value = "headImage", required = false) MultipartFile file
+    ) {
+        BaseResponseResult<SysUser> responseResult = new BaseResponseResult<>();
+        SysUser user = userRepository.findByPhoneNumber(phoneNumber);
+        if (user == null) {
+            responseResult.setErrCode(BaseResponse.INVALID_USER_TOKEN.getErrCode());
+            responseResult.setErrMsg("用户凭证失效");
+            return responseResult;
+        }
+
+        String headImagePath = null;
+
+        if (file != null) {
+            List<String> paths = FileUtils.saveImage("headImage", file);
+            if (paths == null || paths.size() == 0) {
+                log.error("用户头像保存失败，用户id{}", phoneNumber);
+                responseResult.setErrCode(BaseResponse.INQUIRY_ERROR.getErrCode());
+                responseResult.setErrMsg("更新用户信息失败");
+                return responseResult;
+            }
+            headImagePath = paths.get(0);
+            user.setAddress(address);
+            user.setAge(age);
+            user.setCarType(carType);
+            user.setEmail(email);
+            //Date d = new Date(purchaseDate.toString());
+            if (purchaseDate!=null) {
+                user.setPurchaseDate(new Date(purchaseDate));
+            }
+            user.setDrivingLicenseId(drivingId);
+            user.setSex(sex);
+
+            user.setHeadImage("http://192.168.43.8:8443/image/get/"+headImagePath.substring(14,headImagePath.length()).replace("\\","/"));
+        }
+
+        try {
+            userRepository.updateUserByPhoneNumber(address, age, carType, drivingId, email,
+                    headImagePath, user.getPurchaseDate(), sex, new Date(), phoneNumber);
+
+
+            responseResult.setErrCode(BaseResponse.INQUIRY_SUCCESS.getErrCode());
+            responseResult.setErrMsg(BaseResponse.INQUIRY_SUCCESS.getErrMsg());
+            responseResult.setResultInfo(user);
+            return responseResult;
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("更新用户信息失败 ，用户id{},日期{},{}", phoneNumber, new Date(),e.getStackTrace());
+            responseResult.setErrCode(BaseResponse.INQUIRY_ERROR.getErrCode());
+            responseResult.setErrMsg("更新用户信息失败");
+            return responseResult;
+        }
+
+    }
 
 }

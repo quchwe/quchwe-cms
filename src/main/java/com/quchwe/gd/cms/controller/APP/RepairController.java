@@ -47,6 +47,7 @@ public class RepairController {
     public BaseResponseResult<String> createRepair(@RequestParam("phoneNumber") String phoneNumber,
                                                    @RequestParam("accidentType") String accidentType,
                                                    @RequestParam("description") String description,
+                                                   @RequestParam("drivingId") String drivingId,
                                                    @RequestParam("file0") MultipartFile file,
                                                    @RequestParam(value = "file1", required = false) MultipartFile file1,
                                                    @RequestParam(value = "file2", required = false) MultipartFile file2
@@ -76,6 +77,7 @@ public class RepairController {
             info.setCreateTime(new Date());
             info.setDescpription(description);
             info.setrepairProgress("created");
+            info.setDrivingId(drivingId);
             info.setFilePath(imagePath);
             info.setUserId(phoneNumber);
 

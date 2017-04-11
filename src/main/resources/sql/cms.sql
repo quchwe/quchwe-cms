@@ -25,3 +25,6 @@ CREATE TABLE REPAIR_RECORD(`ID` BIGINT NOT NULL  PRIMARY KEY AUTO_INCREMENT,
   `REPAIR_PROGRESS` VARCHAR(50),
   `FILE_PATH` VARCHAR(1000)
 );
+
+UPDATE sys_user u SET u.address =?1,u.age =?2,u.car_type = ?3,u.driving_license_id =?4,u.email=?5,u.head_image =?6,u.purchase_date=?7,u.update_time=?8
+WHERE u.phone_number = ?9

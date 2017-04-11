@@ -33,6 +33,18 @@ public class SysUser {
     private int age;
     private Date updateTime;
     private String loginName;
+    private String headImage;
+
+
+
+
+    public String getHeadImage() {
+        return headImage;
+    }
+
+    public void setHeadImage(String headImage) {
+        this.headImage = headImage;
+    }
 
     public String getLoginName() {
         return loginName;

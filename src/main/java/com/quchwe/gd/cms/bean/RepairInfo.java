@@ -21,6 +21,39 @@ public class RepairInfo {
     private String description;
     private String repairProgress;
     private String filePath;
+    private String drivingId;
+
+    public Date getRepairDate() {
+        return repairDate;
+    }
+
+    public void setRepairDate(Date repairDate) {
+        this.repairDate = repairDate;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getRepairProgress() {
+        return repairProgress;
+    }
+
+    public void setRepairProgress(String repairProgress) {
+        this.repairProgress = repairProgress;
+    }
+
+    public String getDrivingId() {
+        return drivingId;
+    }
+
+    public void setDrivingId(String drivingId) {
+        this.drivingId = drivingId;
+    }
 
     public Long getId() {
         return id;

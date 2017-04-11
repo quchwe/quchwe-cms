@@ -13,41 +13,42 @@ import java.util.List;
 @Slf4j
 public class FileUtils {
 
-    public static List<String> saveImage(String path, MultipartFile ...files){
+    public static List<String> saveImage(String path, MultipartFile... files) {
 
         List<String> imagePaths = new ArrayList<>();
-        for (MultipartFile file :files){
+        for (MultipartFile file : files) {
 
-            if (file==null){
+            if (file == null) {
                 break;
             }
             BufferedInputStream bis = null;
             BufferedOutputStream bos = null;
             try {
                 bis = new BufferedInputStream(file.getInputStream());
-
-                File f = new File("D:/cms/images/"+path+"createPair/");
+                System.out.println(bis.available());
+                File f = new File("D:/cms/images/" + path + "/");
 
                 f.mkdirs();
-                File image = new File(f, "app-"+path+"-" + System.currentTimeMillis() + "-" + "icon.png");
-                image.createNewFile();
+                String fileName = EncryptionUtil.md5Encryption(file.getOriginalFilename() + System.currentTimeMillis());
+                File image = new File(f, fileName);
+
                 bos = new BufferedOutputStream(new FileOutputStream(image));
                 byte[] bytes = new byte[2048];
                 int len;
                 while ((len = bis.read(bytes)) > -1) {
-                    bos.write(len);
+                    bos.write(bytes, 0, len);
                 }
                 bos.flush();
-                CloseIo.closeIo(bis,bos);
-                log.info(path+"图片保存成功,图片保存在{}",image.getAbsolutePath());
+                log.info(path + "图片保存成功,图片保存在{}", image.getAbsolutePath());
                 imagePaths.add(image.getAbsolutePath());
             } catch (IOException e) {
-                CloseIo.closeIo(bis,bos);
+
                 e.printStackTrace();
 
                 log.error("图片保存失败,{}", e.getMessage());
                 return null;
-
+            } finally {
+                CloseIo.closeIo(bis, bos);
             }
         }
         return imagePaths;
