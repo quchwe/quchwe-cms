@@ -1,10 +1,12 @@
 package com.quchwe.gd.cms.controller.APP;
 
-import com.quchwe.gd.cms.bean.BaseResponse;
-import com.quchwe.gd.cms.bean.BaseResponseResult;
-import com.quchwe.gd.cms.bean.RepairInfo;
+import com.quchwe.gd.cms.bean.*;
+import com.quchwe.gd.cms.repository.CarRepository;
 import com.quchwe.gd.cms.repository.RepairInfoRepository;
+import com.quchwe.gd.cms.repository.SysUserRepository;
 import com.quchwe.gd.cms.utils.FileUtils;
+import com.quchwe.gd.cms.utils.JsonUtils;
+import com.quchwe.gd.cms.utils.NormalUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,16 +23,20 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping(value = "/")
+@RequestMapping(value = "/app/v1/repair")
 @Slf4j
 public class RepairController {
 
 
     private RepairInfoRepository mRepairInfoRep;
+    private SysUserRepository mUserRepo;
+    private CarRepository mCarRepo;
 
     @Autowired
-    public RepairController(RepairInfoRepository repairInfoRepository) {
+    public RepairController(RepairInfoRepository repairInfoRepository, SysUserRepository userRepository, CarRepository mCarRepo) {
         this.mRepairInfoRep = repairInfoRepository;
+        this.mUserRepo = userRepository;
+        this.mCarRepo = mCarRepo;
     }
 
     @RequestMapping(value = "/create_repair", method = RequestMethod.GET)
@@ -66,7 +72,7 @@ public class RepairController {
         String imagePath = "";
 
         for (String s : paths) {
-            imagePath += s+",";
+            imagePath += s + ",";
         }
 
         try {
@@ -98,4 +104,60 @@ public class RepairController {
     }
 
 
+    @RequestMapping(value = "/get_repair")
+    public BaseResponseResult<List<RepairInfo>> getRepairInfo(@RequestParam("phoneNumber") String phoneNumber,
+                                                              @RequestParam(value = "carId", required = false) String carId,
+                                                              @RequestParam("userToken") String token) {
+
+        BaseResponseResult<List<RepairInfo>> response = new BaseResponseResult<>();
+
+        log.info("请求用户车辆维修信息，用户手机号：{},userToken：{}", phoneNumber, token);
+        if (!NormalUtil.isMobileNO(phoneNumber)) {
+            response.setErrCode(BaseResponse.INQUIRY_PARA_ERROR.getErrCode());
+            response.setErrMsg("请输入正确的手机号");
+            log.error("请求车辆维修信息，手机号错误，手机号{}", phoneNumber);
+            return response;
+
+        }
+        try {
+            SysUser user = mUserRepo.findByPhoneNumber(phoneNumber);
+            if (null == user) {
+                response.setErrCode(BaseResponse.INQUIRY_PARA_ERROR.getErrCode());
+                response.setErrMsg("用户不存在");
+                log.error("请求车辆维修信息，用户不存在，手机号{}", phoneNumber);
+                return response;
+            }
+            if (token != user.getUserToken()) {
+                response.setErrCode(BaseResponse.INQUIRY_ERROR.getErrCode());
+                response.setErrMsg("鉴权失败，请重新登录");
+                log.error("请求车辆维修信息，userToken错误 {}", token);
+                return response;
+            }
+            List<RepairInfo> infos = null;
+            if (null != carId && !carId.equals("")) {
+                infos = mRepairInfoRep.findCarsByCarIdAndPhoneNumber(carId, phoneNumber);
+            } else {
+                infos = mRepairInfoRep.findByPhoneNumber(phoneNumber);
+            }
+
+            if (infos == null) {
+                response.setErrCode(BaseResponse.INQUIRY_SUCCESS.getErrCode());
+                response.setErrMsg("无对应车辆维修信息信息");
+                log.error("请求车辆维修信息，无数据，手机号：{},车牌号,{}", phoneNumber, carId);
+                return response;
+            }
+
+            response.setErrCode(BaseResponse.INQUIRY_SUCCESS.getErrCode());
+            response.setErrMsg(BaseResponse.INQUIRY_SUCCESS.getErrMsg());
+            response.setResultInfo(infos);
+            log.info("车辆维修信息返回成功，infos", JsonUtils.toJson(infos));
+            return response;
+
+        } catch (Exception e) {
+            response.setErrCode(BaseResponse.SYSTEM_ERROR.getErrCode());
+            response.setErrMsg("系统异常");
+            log.error("系统异常，获取用户车辆维修信息，手机号:{},carId:{},token:{},异常信息：{}", phoneNumber, carId, token, e.getStackTrace());
+            return response;
+        }
+    }
 }

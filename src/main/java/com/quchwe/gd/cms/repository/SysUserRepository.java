@@ -16,11 +16,30 @@ public interface SysUserRepository extends JpaRepository<SysUser, Long> {
 
     SysUser findByPhoneNumber(String phoneNumber);
 
-    @Query("UPDATE SysUser u SET u.address =?1,u.age =?2,u.carType = ?3,u.drivingLicenseId =?4,u.email=?5,u.headImage =?6,u.purchaseDate=?7,u.sex=?8,u.updateTime=?9 WHERE u.phoneNumber = ?10")
+
+    /**
+     * modifying声明对数据库内容的修改，如更新，删除，@Transactional,事务操作，@Query 查询语句，语句中数字，与方法参数位置一一对应
+     * @param address
+     * @param age
+     * @param carType
+     * @param drivingId
+     * @param email
+     * @param headImage
+     * @param purDate
+     * @param sex
+     * @param signature
+     * @param updateTime
+     * @param loginName
+     * @param phoneNumber
+     * @return
+     */
     @Modifying
     @Transactional
+    @Query("UPDATE SysUser u SET u.address =?1,u.age =?2,u.carType = ?3,u.drivingLicenseId =?4,u.email=?5,u.headImage =?6," +
+            "u.purchaseDate=?7,u.sex=?8,u.signature=?9,u.updateTime=?10 ,u.loginName=?11 WHERE u.phoneNumber = ?12")
     int updateUserByPhoneNumber(String address, int age, String carType, String drivingId, String email,
-                                    String headImage, Date purDate, String sex,Date updateTime,String phoneNumber);
+                                String headImage, Date purDate, String sex, String signature, Date updateTime,
+                                String loginName, String phoneNumber);
 
 
 }

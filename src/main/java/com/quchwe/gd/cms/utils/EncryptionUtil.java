@@ -5,6 +5,7 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * Created by quchaowei
+ * 加密工具类
  * 32位md5
  *
  */

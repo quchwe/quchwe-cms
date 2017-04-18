@@ -14,6 +14,8 @@ public class RepairInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    private String carId;
     private String userId;
     private Date repairDate;
     private String accidentType;
@@ -117,5 +119,13 @@ public class RepairInfo {
 
     public void setFilePath(String filePath) {
         this.filePath = filePath;
+    }
+
+    public String getCarId() {
+        return carId;
+    }
+
+    public void setCarId(String carId) {
+        this.carId = carId;
     }
 }

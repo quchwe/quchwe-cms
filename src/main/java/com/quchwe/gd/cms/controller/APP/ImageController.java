@@ -11,11 +11,19 @@ import java.io.*;
 
 /**
  * Created by quchwe on 2017/4/11 0011.
+ * 随便写的一个图片下载，图片在本机电脑上
  */
 @RestController
 @RequestMapping(value = "/")
 public class ImageController {
 
+    /**
+     *
+     * @param directory 图片所在文件夹
+     * @param imageName
+     * @param request
+     * @param response
+     */
     @RequestMapping(value = "/image/get/{directory}/{imageName}")
     public void getImage(@PathVariable String directory, @PathVariable String imageName, HttpServletRequest request, HttpServletResponse response) {
         OutputStream out;

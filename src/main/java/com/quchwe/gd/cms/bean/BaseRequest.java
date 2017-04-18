@@ -5,10 +5,19 @@ package com.quchwe.gd.cms.bean;
  */
 
 public class BaseRequest<T> {
+    String phoneNumber;
     String userToken;
     String md5;
     long timeStamp;
     T requestBean;
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
     public String getUserToken() {
         return userToken;

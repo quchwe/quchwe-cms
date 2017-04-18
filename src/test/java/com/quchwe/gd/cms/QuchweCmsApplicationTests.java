@@ -27,7 +27,6 @@ public class QuchweCmsApplicationTests {
 		user.setPhoneNumber("18014923897");
 		user.setSex("男");
 
-		userRepository.updateUserByPhoneNumber(user.getAddress(),user.getAge(),user.getCarType(),user.getDrivingLicenseId(),user.getEmail(),user.getHeadImage(),
-				user.getPurchaseDate(),user.getSex(),user.getUpdateTime(),user.getPhoneNumber());
+
 	}
 }

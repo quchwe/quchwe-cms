@@ -12,7 +12,7 @@ import java.util.Date;
 @Entity
 public class SysUser {
 
-    private static long serialVersionUID = 2L;
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -32,11 +32,17 @@ public class SysUser {
     private String email;
     private int age;
     private Date updateTime;
-    private String loginName;
     private String headImage;
+    private String signature;
+    private String userToken;
 
+    public String getSignature() {
+        return signature;
+    }
 
-
+    public void setSignature(String signature) {
+        this.signature = signature;
+    }
 
     public String getHeadImage() {
         return headImage;
@@ -46,13 +52,6 @@ public class SysUser {
         this.headImage = headImage;
     }
 
-    public String getLoginName() {
-        return loginName;
-    }
-
-    public void setLoginName(String loginName) {
-        this.loginName = loginName;
-    }
 
     public Date getUpdateTime() {
         return updateTime;
@@ -196,6 +195,14 @@ public class SysUser {
         return userName;
     }
 
+    public String getUserToken() {
+        return userToken;
+    }
+
+    public void setUserToken(String userToken) {
+        this.userToken = userToken;
+    }
+
     @Override
     public String toString() {
         return "SysUser{" +
@@ -215,7 +222,9 @@ public class SysUser {
                 ", email='" + email + '\'' +
                 ", age=" + age +
                 ", updateTime=" + updateTime +
-                ", loginName='" + loginName + '\'' +
+                ", headImage='" + headImage + '\'' +
+                ", signature='" + signature + '\'' +
+                ", userToken='" + userToken + '\'' +
                 '}';
     }
 }

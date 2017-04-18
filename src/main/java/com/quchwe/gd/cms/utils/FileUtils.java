@@ -1,6 +1,7 @@
 package com.quchwe.gd.cms.utils;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
@@ -10,9 +11,16 @@ import java.util.List;
 /**
  * Created by quchwe on 2017/4/10 0010.
  */
-@Slf4j
+
 public class FileUtils {
 
+    private static Logger log = LoggerFactory.getLogger(FileUtils.class);
+    /**
+     * 保存文件
+     * @param path 路径
+     * @param files 文件
+     * @return 文件存储的路径地址，windows地址，windows文件分隔符为\,访问时需要替换为"/"
+     */
     public static List<String> saveImage(String path, MultipartFile... files) {
 
         List<String> imagePaths = new ArrayList<>();
