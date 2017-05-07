@@ -5,11 +5,13 @@ import com.quchwe.gd.cms.bean.BaseResponse;
 import com.quchwe.gd.cms.bean.BaseResponseResult;
 import com.quchwe.gd.cms.bean.SysUser;
 import com.quchwe.gd.cms.repository.SysUserRepository;
+import com.quchwe.gd.cms.utils.EncryptionUtil;
 import com.quchwe.gd.cms.utils.FileUtils;
 import com.quchwe.gd.cms.utils.NormalUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,15 +44,23 @@ public class APPLoginController {
         SysUser user = null;
         try {
             user = userRepository.findByPhoneNumber(sysUserBaseRequest.getRequestBean().getPhoneNumber());
-            String str = user.getHeadImage().substring(14, user.getHeadImage().length());
 
-            user.setHeadImage("http://192.168.43.8:8443/image/get/" + str.replace("\\", "/"));
+
             if (user == null) {
                 responseResult.setErrCode(BaseResponse.INVALID_UID.getErrCode());
                 responseResult.setErrMsg(BaseResponse.INVALID_UID.getErrMsg());
                 log.error("用户不存在");
                 return responseResult;
             }
+
+            if (!StringUtils.isEmpty(user.getHeadImage())) {
+                String str = user.getHeadImage().substring(14, user.getHeadImage().length());
+
+                user.setHeadImage("http://192.168.3.9:8443/image/get/" + str.replace("\\", "/"));
+            }
+
+            user.setUserToken(EncryptionUtil.md5Encryption(user.getPhoneNumber()+System.currentTimeMillis()));
+            userRepository.updateUserToken(user.getUserToken(),user.getPhoneNumber());
         } catch (Exception e) {
             e.printStackTrace();
             log.error("数据库查询出错", e.getMessage());
@@ -94,6 +104,7 @@ public class APPLoginController {
     /**
      * 更新用户信息的一个方法，为求速度，极其凌乱，后面的图片保存在数据库中的路径为本地存放位置，
      * 故在最后修改为下载地址，返回给客户端，怎么设计合理，凭个人爱好
+     *
      * @return 用户信息
      */
     @RequestMapping(value = "/updateUserInfo", method = RequestMethod.POST)
@@ -173,15 +184,12 @@ public class APPLoginController {
              *address=addr.getHostName()toString;//获得本机名称
              *来进行拼接 ，
              */
-            user.setHeadImage("http://192.168.43.8:8443/image/get/" + str.replace("\\", "/"));
+            user.setHeadImage("http://192.168.3.9:8443/image/get/" + str.replace("\\", "/"));
             responseResult.setErrCode(BaseResponse.INQUIRY_SUCCESS.getErrCode());
             responseResult.setErrMsg(BaseResponse.INQUIRY_SUCCESS.getErrMsg());
             responseResult.setResultInfo(user);
             return responseResult;
-        } catch (
-                Exception e)
-
-        {
+        } catch (Exception e){
             e.printStackTrace();
             log.error("更新用户信息失败 ，用户id{},日期{},{}", phoneNumber, new Date(), e.getStackTrace());
             responseResult.setErrCode(BaseResponse.INQUIRY_ERROR.getErrCode());

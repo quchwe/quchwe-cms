@@ -191,9 +191,6 @@ public class SysUser {
     }
 
 
-    public String getUsername() {
-        return userName;
-    }
 
     public String getUserToken() {
         return userToken;

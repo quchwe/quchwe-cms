@@ -16,7 +16,7 @@ public class RepairInfo {
     private Long id;
 
     private String carId;
-    private String userId;
+    private String phoneNumber;
     private Date repairDate;
     private String accidentType;
     private Date createTime;
@@ -65,12 +65,12 @@ public class RepairInfo {
         this.id = id;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public Date getrepairDate() {

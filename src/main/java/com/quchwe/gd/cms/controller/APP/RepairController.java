@@ -85,7 +85,7 @@ public class RepairController {
             info.setrepairProgress("created");
             info.setDrivingId(drivingId);
             info.setFilePath(imagePath);
-            info.setUserId(phoneNumber);
+            info.setPhoneNumber(phoneNumber);
 
             mRepairInfoRep.save(info);
 

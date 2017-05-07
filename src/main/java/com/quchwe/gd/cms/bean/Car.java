@@ -17,9 +17,9 @@ public class Car {
     private String carId;
     private String phoneNumber;
     private String carType;
-    private Date procuctionDate;
+    private Date productionDate;
     private String files;
-    private String desc;
+    private String description;
     private String miles;
 
     public Long getId() {
@@ -54,12 +54,12 @@ public class Car {
         this.carType = carType;
     }
 
-    public Date getProcuctionDate() {
-        return procuctionDate;
+    public Date getProductionDate() {
+        return productionDate;
     }
 
-    public void setProcuctionDate(Date procuctionDate) {
-        this.procuctionDate = procuctionDate;
+    public void setProductionDate(Date productionDate) {
+        this.productionDate = productionDate;
     }
 
     public String getFiles() {
@@ -70,12 +70,12 @@ public class Car {
         this.files = files;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getMiles() {
