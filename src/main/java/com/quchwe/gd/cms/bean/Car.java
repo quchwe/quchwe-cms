@@ -21,6 +21,42 @@ public class Car {
     private String files;
     private String description;
     private String miles;
+    private String speed;
+    private String category;
+    private String displacement;
+    private String origin;
+
+    public String getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(String speed) {
+        this.speed = speed;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getDisplacement() {
+        return displacement;
+    }
+
+    public void setDisplacement(String displacement) {
+        this.displacement = displacement;
+    }
+
+    public String getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(String origin) {
+        this.origin = origin;
+    }
 
     public Long getId() {
         return id;

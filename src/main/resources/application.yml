@@ -13,11 +13,11 @@ spring:
       naming:
         strategy: org.hibernate.cfg.ImprovedNamingStrategy
 
-  data:
-    mongodb:
-      host: localhost
-      port: 27017
-      database: cms
+#  data:
+#    mongodb:
+#      host: localhost
+#      port: 27017
+#      database: cms
   thymeleaf:
     encoding: UTF-8
     content-type: text/html

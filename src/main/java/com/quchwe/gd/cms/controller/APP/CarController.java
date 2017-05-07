@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,7 +39,7 @@ public class CarController {
         if (!NormalUtil.isMobileNO(phoneNumber)) {
             response.setErrCode(BaseResponse.INQUIRY_PARA_ERROR.getErrCode());
             response.setErrMsg("请输入正确的手机号");
-            log.error("添加车辆信息，手机号错误，手机号{}", phoneNumber);
+            log.error("获取用户车辆信息，手机号错误，手机号{}", phoneNumber);
             return response;
 
         }
@@ -50,7 +51,7 @@ public class CarController {
                 log.error("用户不存在，手机号{}", phoneNumber);
                 return response;
             }
-            if (token != user.getUserToken()) {
+            if (!token.equals(user.getUserToken())) {
                 response.setErrCode(BaseResponse.INQUIRY_ERROR.getErrCode());
                 response.setErrMsg("鉴权失败，请重新登录");
                 log.error("userToken错误 {}", token);
@@ -64,6 +65,7 @@ public class CarController {
                 log.info("用户无车辆，手机号{}", phoneNumber);
                 return response;
             }
+
 
             response.setErrCode(BaseResponse.INQUIRY_SUCCESS.getErrCode());
             response.setErrMsg(BaseResponse.INQUIRY_SUCCESS.getErrMsg());
@@ -79,7 +81,7 @@ public class CarController {
 
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
     public BaseResponseResult<String> addCars(@RequestBody BaseRequest<Car> carReq) {
         String phoneNumber = carReq.getPhoneNumber();
         String token = carReq.getUserToken();
@@ -87,7 +89,7 @@ public class CarController {
 
         BaseResponseResult<String> response = new BaseResponseResult<>();
 
-        log.info("添加用户车辆信息，用户手机号：{},userToken：{}", phoneNumber, carReq.getUserToken());
+        log.info("更新用户车辆信息，用户手机号：{},userToken：{}", phoneNumber, carReq.getUserToken());
         if (StringUtils.isEmpty(phoneNumber) || StringUtils.isEmpty(token)) {
             response.setErrCode(BaseResponse.INQUIRY_PARA_ERROR.getErrCode());
             response.setErrMsg("缺少参数");
@@ -113,19 +115,25 @@ public class CarController {
                 log.error("用户不存在，手机号{}", phoneNumber);
                 return response;
             }
-            if (token != user.getUserToken()) {
+            if (!user.getUserToken().equals(token)) {
                 response.setErrCode(BaseResponse.INVALID_USER_TOKEN.getErrCode());
                 response.setErrMsg("鉴权失败，请重新登录");
                 log.error("userToken错误 {}", token);
                 return response;
             }
 
-            Car car = carRepo.findCarsByCarId(carReq.getRequestBean().getCarId());
-            if (null != car) {
-                response.setErrCode(BaseResponse.INQUIRY_ERROR.getErrCode());
-                response.setErrMsg("已有车辆");
-                log.info("已有该车牌号，手机号{}", car.getCarId());
-                return response;
+            Car c = carRepo.findCarsByCarId(carReq.getRequestBean().getCarId());
+            if (null != c) {
+
+                Car car = carReq.getRequestBean();
+                int i = carRepo.updateByMobAndCarId(car.getCarType(), car.getCategory(), car.getDescription(), car.getDisplacement(),
+                        car.getFiles(), car.getMiles(), car.getOrigin(), car.getSpeed(), car.getPhoneNumber(), car.getCarId());
+                if (i > 0) {
+                    response.setErrMsg("更新成功");
+                    response.setErrCode(BaseResponse.INQUIRY_SUCCESS.getErrCode());
+                    log.info("已有该车牌号，手机号{}", car.getCarId());
+                    return response;
+                }
             }
 
             Car newCar = carRepo.save(carReq.getRequestBean());
@@ -135,7 +143,7 @@ public class CarController {
                 response.setResultInfo("添加成功");
                 log.info("车辆添加成功,车辆信息：{}", JsonUtils.toJson(newCar));
                 return response;
-            }else {
+            } else {
                 response.setErrCode(BaseResponse.INQUIRY_ERROR.getErrCode());
                 response.setErrMsg(BaseResponse.INQUIRY_ERROR.getErrMsg());
                 response.setResultInfo("添加失败");

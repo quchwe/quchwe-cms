@@ -3,13 +3,17 @@ package com.quchwe.gd.cms.utils;
 import com.quchwe.gd.cms.bean.BaseRequest;
 import com.quchwe.gd.cms.bean.BaseResponse;
 import com.quchwe.gd.cms.bean.BaseResponseResult;
+import lombok.extern.slf4j.Slf4j;
 
+import java.net.Inet4Address;
+import java.net.UnknownHostException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * Created by quchwe on 2017/4/5 0005.
  */
+@Slf4j
 public class NormalUtil {
 
     public static <T>  boolean  authentication(BaseRequest<T> request, String md5){
@@ -51,5 +55,15 @@ public class NormalUtil {
         Matcher m = p.matcher(id);
 
         return m.matches();
+    }
+
+    public static String localIp(){
+        try {
+            return Inet4Address.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            log.error("获取本机ip失败，{}",e);
+            return null;
+        }
+
     }
 }

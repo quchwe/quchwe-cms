@@ -1,12 +1,11 @@
 package com.quchwe.gd.cms.controller.APP;
 
-import com.quchwe.gd.cms.bean.BaseRequest;
-import com.quchwe.gd.cms.bean.BaseResponse;
-import com.quchwe.gd.cms.bean.BaseResponseResult;
-import com.quchwe.gd.cms.bean.SysUser;
+import com.quchwe.gd.cms.bean.*;
+import com.quchwe.gd.cms.repository.CarRepository;
 import com.quchwe.gd.cms.repository.SysUserRepository;
 import com.quchwe.gd.cms.utils.EncryptionUtil;
 import com.quchwe.gd.cms.utils.FileUtils;
+import com.quchwe.gd.cms.utils.JsonUtils;
 import com.quchwe.gd.cms.utils.NormalUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +28,8 @@ public class APPLoginController {
     @Autowired
     SysUserRepository userRepository;
 
-
+    @Autowired
+    CarRepository carRepository;
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @SuppressWarnings("unchecked")
     public BaseResponseResult<SysUser> login(@RequestBody BaseRequest<SysUser> sysUserBaseRequest) {
@@ -55,8 +55,12 @@ public class APPLoginController {
 
             if (!StringUtils.isEmpty(user.getHeadImage())) {
                 String str = user.getHeadImage().substring(14, user.getHeadImage().length());
-
-                user.setHeadImage("http://192.168.3.9:8443/image/get/" + str.replace("\\", "/"));
+                String ip = NormalUtil.localIp();
+                StringBuilder builder = new StringBuilder("http://");
+                builder.append(ip);
+                builder.append(":8443/image/get/");
+                builder.append( str.replace("\\", "/"));
+                user.setHeadImage(builder.toString());
             }
 
             user.setUserToken(EncryptionUtil.md5Encryption(user.getPhoneNumber()+System.currentTimeMillis()));
@@ -89,9 +93,24 @@ public class APPLoginController {
                 return responseResult;
             }
 
-            if (null != userRepository.save(userRequest.getRequestBean())) {
+            SysUser user = userRequest.getRequestBean();
+            user.setUserToken(EncryptionUtil.md5Encryption(user.getPhoneNumber()+System.currentTimeMillis()));
+
+            SysUser u = userRepository.save(user);
+
+            if (null != u) {
+
+
+                Car car = new Car();
+                car.setCarId(user.getDrivingLicenseId());
+                car.setCarType(user.getCarType());
+                car.setPhoneNumber(user.getPhoneNumber());
+                car.setProductionDate(new Date());
+                carRepository.save(car);
+
                 responseResult.setErrCode(BaseResponse.INQUIRY_SUCCESS.getErrCode());
                 responseResult.setErrMsg(BaseResponse.INQUIRY_SUCCESS.getErrMsg());
+                responseResult.setResultInfo(u);
                 return responseResult;
             }
         } catch (Exception e) {
@@ -184,10 +203,17 @@ public class APPLoginController {
              *address=addr.getHostName()toString;//获得本机名称
              *来进行拼接 ，
              */
-            user.setHeadImage("http://192.168.3.9:8443/image/get/" + str.replace("\\", "/"));
+            String ip = NormalUtil.localIp();
+            StringBuilder builder = new StringBuilder("http://");
+            builder.append(ip);
+            builder.append(":8443/image/get/");
+            builder.append( str.replace("\\", "/"));
+            user.setHeadImage(builder.toString());
+//            user.setHeadImage("http://192.168.3.9:8443/image/get/" + str.replace("\\", "/"));
             responseResult.setErrCode(BaseResponse.INQUIRY_SUCCESS.getErrCode());
             responseResult.setErrMsg(BaseResponse.INQUIRY_SUCCESS.getErrMsg());
             responseResult.setResultInfo(user);
+            log.info("用户信息", JsonUtils.toJson(responseResult));
             return responseResult;
         } catch (Exception e){
             e.printStackTrace();
