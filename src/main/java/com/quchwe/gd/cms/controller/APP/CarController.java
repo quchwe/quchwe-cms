@@ -30,12 +30,25 @@ public class CarController {
     }
 
     @RequestMapping(value = "/get")
-    public BaseResponseResult<List<Car>> getCars(@RequestParam(value = "phoneNumber") String phoneNumber,
+    public BaseResponseResult<List<Car>> getCars(@RequestParam(value = "phoneNumber", required = false) String phoneNumber,
+                                                 @RequestParam(value = "carId", required = false) String carId,
                                                  @RequestParam(value = "userToken") String token) {
 
         BaseResponseResult<List<Car>> response = new BaseResponseResult<>();
 
-        log.info("请求用户车辆信息，用户手机号：{},userToken：{}", phoneNumber, token);
+        log.info("请求用户车辆信息，用户手机号：{},userToken：{},carId{}", phoneNumber, token, carId);
+
+        if (StringUtils.isEmpty(phoneNumber) && !StringUtils.isEmpty(carId)) {
+            List<Car> cars = new ArrayList<>();
+            Car car = carRepo.findCarsByCarId(carId);
+            if (car != null)
+                cars.add(car);
+            response.setErrCode(BaseResponse.INQUIRY_SUCCESS.getErrCode());
+            response.setErrMsg("success");
+            response.setResultInfo(cars);
+            return response;
+        }
+
         if (!NormalUtil.isMobileNO(phoneNumber)) {
             response.setErrCode(BaseResponse.INQUIRY_PARA_ERROR.getErrCode());
             response.setErrMsg("请输入正确的手机号");
@@ -43,6 +56,8 @@ public class CarController {
             return response;
 
         }
+
+
         try {
             SysUser user = userRepository.findByPhoneNumber(phoneNumber);
             if (null == user) {
@@ -135,6 +150,7 @@ public class CarController {
                     return response;
                 }
             }
+
 
             Car newCar = carRepo.save(carReq.getRequestBean());
             if (newCar != null) {

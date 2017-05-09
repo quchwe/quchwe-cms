@@ -81,9 +81,9 @@ public class RepairController {
 
             info.setAccidentType(accidentType);
             info.setCreateTime(new Date());
-            info.setDescpription(description);
-            info.setrepairProgress("created");
-            info.setDrivingId(drivingId);
+            info.setDescription(description);
+            info.setRepairProgress("created");
+            info.setCarId(drivingId);
             info.setFilePath(imagePath);
             info.setPhoneNumber(phoneNumber);
 
@@ -104,7 +104,7 @@ public class RepairController {
     }
 
 
-    @RequestMapping(value = "/get_repair")
+    @RequestMapping(value = "/get")
     public BaseResponseResult<List<RepairInfo>> getRepairInfo(@RequestParam("phoneNumber") String phoneNumber,
                                                               @RequestParam(value = "carId", required = false) String carId,
                                                               @RequestParam("userToken") String token) {
@@ -127,7 +127,7 @@ public class RepairController {
                 log.error("请求车辆维修信息，用户不存在，手机号{}", phoneNumber);
                 return response;
             }
-            if (token != user.getUserToken()) {
+            if (!token.equals(user.getUserToken())) {
                 response.setErrCode(BaseResponse.INQUIRY_ERROR.getErrCode());
                 response.setErrMsg("鉴权失败，请重新登录");
                 log.error("请求车辆维修信息，userToken错误 {}", token);

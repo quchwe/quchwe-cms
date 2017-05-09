@@ -25,44 +25,12 @@ public class RepairInfo {
     private String filePath;
     private String drivingId;
 
-    public Date getRepairDate() {
-        return repairDate;
+    public String getCarId() {
+        return carId;
     }
 
-    public void setRepairDate(Date repairDate) {
-        this.repairDate = repairDate;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getRepairProgress() {
-        return repairProgress;
-    }
-
-    public void setRepairProgress(String repairProgress) {
-        this.repairProgress = repairProgress;
-    }
-
-    public String getDrivingId() {
-        return drivingId;
-    }
-
-    public void setDrivingId(String drivingId) {
-        this.drivingId = drivingId;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public void setCarId(String carId) {
+        this.carId = carId;
     }
 
     public String getPhoneNumber() {
@@ -73,11 +41,11 @@ public class RepairInfo {
         this.phoneNumber = phoneNumber;
     }
 
-    public Date getrepairDate() {
+    public Date getRepairDate() {
         return repairDate;
     }
 
-    public void setrepairDate(Date repairDate) {
+    public void setRepairDate(Date repairDate) {
         this.repairDate = repairDate;
     }
 
@@ -97,19 +65,19 @@ public class RepairInfo {
         this.createTime = createTime;
     }
 
-    public String getDescpription() {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescpription(String description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    public String getrepairProgress() {
+    public String getRepairProgress() {
         return repairProgress;
     }
 
-    public void setrepairProgress(String repairProgress) {
+    public void setRepairProgress(String repairProgress) {
         this.repairProgress = repairProgress;
     }
 
@@ -121,11 +89,19 @@ public class RepairInfo {
         this.filePath = filePath;
     }
 
-    public String getCarId() {
-        return carId;
+    public String getDrivingId() {
+        return drivingId;
     }
 
-    public void setCarId(String carId) {
-        this.carId = carId;
+    public void setDrivingId(String drivingId) {
+        this.drivingId = drivingId;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

@@ -57,7 +57,7 @@ public class APPLoginController {
                 String str = user.getHeadImage().substring(14, user.getHeadImage().length());
                 String ip = NormalUtil.localIp();
                 StringBuilder builder = new StringBuilder("http://");
-                builder.append(ip);
+                builder.append("192.168.100.5");
                 builder.append(":8443/image/get/");
                 builder.append( str.replace("\\", "/"));
                 user.setHeadImage(builder.toString());
@@ -205,7 +205,7 @@ public class APPLoginController {
              */
             String ip = NormalUtil.localIp();
             StringBuilder builder = new StringBuilder("http://");
-            builder.append(ip);
+            builder.append("192.168.100.5");
             builder.append(":8443/image/get/");
             builder.append( str.replace("\\", "/"));
             user.setHeadImage(builder.toString());
